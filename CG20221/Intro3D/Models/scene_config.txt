@@ -1,0 +1,4 @@
+camPos 0 0  3
+camFrn 0 0 -1
+camUpv 0 1  0
+objPikachu.obj

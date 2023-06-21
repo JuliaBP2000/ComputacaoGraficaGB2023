@@ -12,7 +12,7 @@ class Mesh : public Object
 {
 public:
 	int size;
-	//vector <glm::vec2> textureCoordinates;
+	vector <glm::vec2> textureCoordinates;
 
 	Mesh(string fileName)
 	{
@@ -42,11 +42,14 @@ public:
 		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
 		glEnableVertexAttribArray(1);
 
-		/*glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)(6 * sizeof(GLfloat)));
-		glEnableVertexAttribArray(2);*/
+		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)(6 * sizeof(GLfloat)));
+		glEnableVertexAttribArray(2);
+
 
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glBindVertexArray(0);
+
+
 
 		return VAO;
 	};
@@ -66,7 +69,7 @@ private:
 	const string DELIMITER = "/";
 
 	string filePath;
-	
+
 	void parseFromFile(string path)
 	{
 		ifstream inputFileStream;
@@ -87,6 +90,7 @@ private:
 				istringstream sline(line);
 				sline >> word;
 
+
 				if (word == VERTICES || word == NORMALS || word == TEXTURE_COORDS || word == FACES)
 				{
 					glm::vec3 attribute;
@@ -104,7 +108,7 @@ private:
 					{
 						glm::vec2 attribute;
 						sline >> attribute.x >> attribute.y;
-						//textureCoordinates.push_back(attribute);
+						textureCoordinates.push_back(attribute);
 					}
 					if (word == FACES)
 					{
@@ -130,7 +134,7 @@ private:
 
 						verticeAttribute.push_back(iv);
 						normalAttribute.push_back(ivn);
-						//textureAttribute.push_back(ivt);
+						textureAttribute.push_back(ivt);
 					}
 				}
 			}
@@ -180,11 +184,11 @@ private:
 				geometryBuffer.push_back(normalY);
 				geometryBuffer.push_back(normalZ);
 
-				/*float textureX = textureCoordinates[(int)textureAttribute[i][j] - 1].x;
+				float textureX = textureCoordinates[(int)textureAttribute[i][j] - 1].x;
 				float textureY = textureCoordinates[(int)textureAttribute[i][j] - 1].y;
 
 				geometryBuffer.push_back(textureX);
-				geometryBuffer.push_back(textureY);*/
+				geometryBuffer.push_back(textureY);
 			}
 		}
 	};

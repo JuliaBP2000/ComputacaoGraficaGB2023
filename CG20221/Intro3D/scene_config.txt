@@ -1,4 +1,5 @@
 camPos 0 0 1
 camFrn 0 1 0
 camUpv 1 0 0
+Pikachu.mtl
 Pikachu.obj

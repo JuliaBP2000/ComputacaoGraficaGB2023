@@ -5,6 +5,7 @@
 #include <sstream>
 #include <string>
 #include <vector>
+#include "stb_image.h"
 
 using namespace std;
 
@@ -12,13 +13,16 @@ class Mesh : public Object
 {
 public:
 	int size;
-	vector <glm::vec2> textureCoordinates;
+	/*vector <glm::vec2> textureCoordinates;
+	vector<GLuint> textures;*/
+	
 
-	Mesh(string fileName)
+	Mesh(string objPath/*, string texturePath*/)
 	{
-		filePath = MESHES_PATH + fileName;
+		filePath = MESHES_PATH + objPath;
 
 		parseFromFile(filePath);
+		//textures = loadTexture(MESHES_PATH + texturePath);
 		
 		size = verticeAttribute.size() * 3;
 	}
@@ -108,7 +112,7 @@ private:
 					{
 						glm::vec2 attribute;
 						sline >> attribute.x >> attribute.y;
-						textureCoordinates.push_back(attribute);
+						//textureCoordinates.push_back(attribute);
 					}
 					if (word == FACES)
 					{
@@ -134,7 +138,7 @@ private:
 
 						verticeAttribute.push_back(iv);
 						normalAttribute.push_back(ivn);
-						textureAttribute.push_back(ivt);
+						//textureAttribute.push_back(ivt);
 					}
 				}
 			}
@@ -184,12 +188,55 @@ private:
 				geometryBuffer.push_back(normalY);
 				geometryBuffer.push_back(normalZ);
 
-				float textureX = textureCoordinates[(int)textureAttribute[i][j] - 1].x;
+				/*float textureX = textureCoordinates[(int)textureAttribute[i][j] - 1].x;
 				float textureY = textureCoordinates[(int)textureAttribute[i][j] - 1].y;
 
 				geometryBuffer.push_back(textureX);
-				geometryBuffer.push_back(textureY);
+				geometryBuffer.push_back(textureY);*/
 			}
 		}
 	};
+
+	vector<GLuint> loadTexture(string texturePath) {
+		vector<string> textureFiles; 
+
+		ifstream mtlStream(texturePath);
+		if (mtlStream.is_open()) {
+			string line;
+			while (getline(mtlStream, line)) {
+				stringstream ss(line);
+				string prefix;
+				ss >> prefix;
+
+				if (prefix == "map_Kd") {
+					string textureFile;
+					ss >> textureFile;
+					textureFiles.push_back(textureFile);
+				}
+			}
+			mtlStream.close();
+		}
+
+		vector<GLuint> textures(textureFiles.size());
+		for (size_t i = 0; i < textureFiles.size(); ++i) {
+			GLuint texture;
+			glGenTextures(1, &texture);
+			glBindTexture(GL_TEXTURE_2D, texture);
+
+			int width, height, channels;
+			unsigned char* image = stbi_load(textureFiles[i].c_str(), &width, &height, &channels, STBI_rgb);
+
+
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
+			glGenerateMipmap(GL_TEXTURE_2D);
+
+			stbi_image_free(image);
+			glBindTexture(GL_TEXTURE_2D, 0);
+
+			textures[i] = texture;
+		}
+		
+
+		return textures;
+	};	
 };

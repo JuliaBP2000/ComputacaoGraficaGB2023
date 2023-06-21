@@ -21,7 +21,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void processInput(GLFWwindow* window);
 
-bool rotateX = false, rotateY = false, rotateZ = false;
+bool rotateX = false, rotateY = false, rotateZ = false, translate = false;
 
 bool firstMouse = true;
 float lastX = WIDTH / 2.0, lastY = HEIGHT / 2.0;
@@ -46,10 +46,13 @@ int main()
 
 	//pega o objeto e os atributos da camera que existem no nosso arquivo de entrada
 	vector<string> objectsFiles = sceneManager->getObjConfig();
+	/*vector<string> textureFiles;
+	textureFiles.push_back("Pikachu.mtl");*/
 
 	GLuint VAO;
 	for (int i = 0; i < objectsFiles.size(); i++) {
-		VAO = sceneManager->setupMesh(objectsFiles[i]);
+
+		VAO = sceneManager->setupMesh(objectsFiles[i]/*, textureFiles[0]*/);
 	}
 
 	glm::mat4 model = glm::mat4(1); //matriz identidade;
@@ -66,14 +69,9 @@ int main()
 	projection = glm::perspective(glm::radians(45.0f), (GLfloat)WIDTH / (GLfloat)HEIGHT, 0.1f, 100.0f);
 	shader->setMat4("projection", glm::value_ptr(projection));
 
-	
-
 	shader->setVec3("lightPos", 0.0, 5.0, 2.0);
 	shader->setVec3("lightColor", 1.0f, 1.0f, 1.0f);
 	shader->setVec3("objectColor", 0.196, 0.450, 0.658);
-
-	glActiveTexture(GL_TEXTURE0);
-	glUniform1i(glGetUniformLocation(shader->ID, "colorBuffer"), 0);
 
 	glEnable(GL_DEPTH_TEST);
 
@@ -92,8 +90,10 @@ int main()
 
 		model = glm::mat4(1);
 
-		//model = glm::translate(model, glm::vec3(0.0, 0.0, cos(angle) * 10.0));
-		if (rotateX)
+		if (translate) {
+			model = glm::translate(model, glm::vec3(0.0, 0.0, cos(angle) * 10.0));
+		}
+		else if (rotateX)
 		{
 			model = glm::rotate(model, angle, glm::vec3(1.0f, 0.0f, 0.0f));
 
@@ -115,7 +115,8 @@ int main()
 		view = glm::lookAt(camera->position, camera->position + camera->front, camera->upDirectionVector);
 		shader->setMat4("view", glm::value_ptr(view));
 
-		glBindTexture(GL_TEXTURE_2D, );
+		//sceneManager->setupTexture();
+
 		glBindVertexArray(VAO);
 		glDrawArrays(GL_TRIANGLES, 0, sceneManager->getMeshSize());
 		glBindVertexArray(0);
@@ -171,6 +172,19 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 void processInput(GLFWwindow* window)
 {
 	glfwPollEvents();
+
+	if (glfwGetKey(window, GLFW_KEY_T) == GLFW_PRESS)
+	{
+		translate = true;
+	}
+
+	if (glfwGetKey(window, GLFW_KEY_P) == GLFW_PRESS)
+	{
+		translate = false;
+		rotateX = false;
+		rotateY = false;
+		rotateZ = false;
+	}
 
 	if(glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS)
 	{

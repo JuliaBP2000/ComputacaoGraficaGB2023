@@ -59,11 +59,21 @@ void SceneManager::setupWindow()
 	glViewport(0, 0, width, height);
 }
 
-int SceneManager::setupMesh(string meshFileName)
+int SceneManager::setupMesh(string objFileName/*, string textureFileName*/)
 {
-	mesh = new Mesh(meshFileName);
+	mesh = new Mesh(objFileName/*, textureFileName*/);
 
 	return mesh->setupGeometry();
+}
+
+void SceneManager::setupTexture() {
+	for (size_t i = 0; i < mesh->size; i++)
+	{
+		glActiveTexture(GL_TEXTURE0);
+		//glBindTexture(GL_TEXTURE_2D, mesh->textures[i]);
+		glUniform1i(glGetUniformLocation(shader->ID, "colorBuffer"), 0);
+	}
+
 }
 
 int SceneManager::getMeshSize() 
@@ -106,3 +116,38 @@ vector<string> SceneManager::getObjConfig()
 
 	return objectsFiles;
 };
+
+vector<string> SceneManager::getTextureConfig() {
+	vector<string> textureFile;
+
+	ifstream inputFileStream;
+	inputFileStream.open("./Models/scene_config.txt");
+
+	const int MAX_CHARACTERES_LINE = 100;
+
+	if (inputFileStream.is_open())
+	{
+		char line[MAX_CHARACTERES_LINE];
+		string strLine;
+
+		while (!inputFileStream.eof())
+		{
+			inputFileStream.getline(line, MAX_CHARACTERES_LINE);
+			strLine = line;
+			string word;
+			istringstream sline(line);
+			sline >> word;
+
+			string param = word.substr(0, 3);
+
+			if (param == "mtl")
+			{
+				textureFile.push_back(word.substr(3, word.size()));
+			}
+		}
+		inputFileStream.close();
+	}
+	else cout << "Erro ao ler o arquivo config" << endl;
+
+	return textureFile;
+}

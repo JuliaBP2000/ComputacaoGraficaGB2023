@@ -19,9 +19,11 @@ public:
 	~SceneManager();
 
 	GLFWwindow* initialize();
-	int setupMesh(string meshFileName);
+	int setupMesh(string objFileName/*, string textureFileName*/);
+	void setupTexture();
 	int getMeshSize();
 	vector<string> getObjConfig();
+	vector<string> getTextureConfig();
 
 private:
 	GLFWwindow* window;

@@ -1,0 +1,24 @@
+camPos 0 0 3
+camFrn 0 0 -1
+camUpv 0 1 0
+
+object ../../3D_models/Pokemon/Pikachu.obj
+texture ../../3D_models/Pokemon/Pikachu.mtl
+image ../../3D_models/Pokemon/textures/PikachuMouthDh.png
+image ../../3D_models/Pokemon/textures/PikachuDh.png
+image ../../3D_models/Pokemon/textures/PikachuHohoDh.png
+image ../../3D_models/Pokemon/textures/PikachuEyeDh.png
+image ../../3D_models/Pokemon/textures/PikachuDh.png
+
+object ../../3D_models/Suzanne/SuzanneTriTextured.obj
+texture ../../3D_models/Suzanne/SuzanneTriTextured.mtl
+image ../../3D_models/Suzanne/example.bmp
+
+object ../../3D_models/Pokemon/PikachuF.obj
+texture ../../3D_models/Pokemon/PikachuF.mtl
+
+object ../../3D_models/Suzanne/CuboTextured.obj
+texture ../../3D_models/Suzanne/CuboTextured.mtl
+
+object ../../3D_models/Suzanne/bola.obj
+texture ../../3D_models/Suzanne/bola.mtl

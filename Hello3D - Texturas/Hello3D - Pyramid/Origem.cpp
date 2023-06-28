@@ -45,13 +45,13 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 vector<string> getTextureConfig();
 vector<string> getObjConfig();
 void getCameraConfig();
-int objectId =0;
+int objectId = 0;
 vector<string> objectsFiles;
 
 // Dimensões da janela (pode ser alterado em tempo de execução)
 const GLuint WIDTH = 1000, HEIGHT = 1000;
 
-bool rotateX = false, rotateY = false, rotateZ = false, translate = false;
+bool rotateX = false, rotateY = false, rotateZ = false, translate = false, redraw=false;
 
 glm::vec3 cameraPos = glm::vec3(0.0, 0.0, 3.0);
 glm::vec3 cameraFront = glm::vec3(0.0, 0.0, -1.0);
@@ -151,7 +151,11 @@ int main()
 	{
 		// Checa se houveram eventos de input (key pressed, mouse moved etc.) e chama as funções de callback correspondentes
 		glfwPollEvents();
-
+		if (redraw) {
+			obj.renew();
+			obj.initialize(objectsFiles[objectId], textureFiles[objectId], &shader);
+			redraw = false;
+		}
 		// Limpa o buffer de cor
 		glClearColor(.4f, .0f, .9f, .8f); //cor de fundo
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -272,12 +276,14 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
 	}
 
-	if (key == GLFW_MOUSE_BUTTON_RIGHT) {
+	if (key == GLFW_KEY_O) {
 		if (objectsFiles.size() - 1 >= objectId) {
 			objectId++;
+			redraw = true;
 		}
 		if (objectsFiles.size() - 1 < objectId) {
 			objectId = 0;
+			redraw = true;
 		}
 	}
 

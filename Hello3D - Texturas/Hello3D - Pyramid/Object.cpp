@@ -20,6 +20,10 @@ void Object::update()
 	shader->setMat4("model", glm::value_ptr(model));
 }
 
+void Object::renew() {
+	grupos.clear();
+}
+
 void Object::draw()
 {
 	for (int i = 0; i < grupos.size(); i++)

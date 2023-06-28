@@ -14,6 +14,7 @@ public:
 	Object() {}
 	void initialize(string filePath,string textureFile, Shader* shader, glm::vec3 position = glm::vec3(0.0f), glm::vec3 scale = glm::vec3(1), float angle = 0.0, glm::vec3 axis = glm::vec3(0.0, 0.0, 1.0));
 	void update();
+	void renew();
 	void draw();
 	vector<string> loadMtl(string texturePath);
 protected:

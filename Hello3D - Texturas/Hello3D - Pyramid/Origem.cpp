@@ -56,6 +56,7 @@ bool rotateX = false, rotateY = false, rotateZ = false, translate = false, redra
 glm::vec3 cameraPos = glm::vec3(0.0, 0.0, 3.0);
 glm::vec3 cameraFront = glm::vec3(0.0, 0.0, -1.0);
 glm::vec3 cameraUp = glm::vec3(0.0, 1.0, 0.0);
+glm::vec3 scale;
 float cameraSpeed = 0.05;
 
 bool firstMouse = true;
@@ -138,6 +139,7 @@ int main()
 	Object obj;
 	obj.initialize(objectsFiles[objectId],textureFiles[objectId], &shader);
 	
+	
 	glActiveTexture(GL_TEXTURE0);
 	glUniform1i(glGetUniformLocation(shader.ID, "colorBuffer"), 0);
 
@@ -146,11 +148,15 @@ int main()
 
 	getCameraConfig();
 
+	shader.setVec3("scaledNormal", scale.x, scale.y, scale.z);
+
 	// Loop da aplicação - "game loop"
 	while (!glfwWindowShouldClose(window))
 	{
 		// Checa se houveram eventos de input (key pressed, mouse moved etc.) e chama as funções de callback correspondentes
 		glfwPollEvents();
+
+		//desenha o proximo objeto.
 		if (redraw) {
 			obj.renew();
 			obj.initialize(objectsFiles[objectId], textureFiles[objectId], &shader);
@@ -183,7 +189,6 @@ int main()
 		else if (rotateZ)
 		{
 			model = glm::rotate(model, angle, glm::vec3(0.0f, 0.0f, 1.0f));
-
 		}
 
 		glUniformMatrix4fv(modelLoc, 1, FALSE, glm::value_ptr(model));
@@ -195,7 +200,7 @@ int main()
 		//Enviando a posição da camera para o shader
 		shader.setVec3("cameraPos", cameraPos.x, cameraPos.y, cameraPos.z);
 
-		obj.update();
+		//obj.update();
 		obj.draw();
 		
 		// Troca os buffers da tela
@@ -292,9 +297,6 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 
 void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 {
-
-	// cout << xpos << " " << ypos << endl;
-
 	if (firstMouse)
 	{
 		lastX = xpos;
@@ -379,6 +381,17 @@ void getCameraConfig() {
 				cameraUp.x = camUpvX;
 				cameraUp.y = camUpvY;
 				cameraUp.z = camUpvZ;
+			}
+
+			if (camParam == "scale") {
+				float scalex, scaley, scalez;
+				sline >> scalex;
+				sline >> scaley;
+				sline >> scalez;
+
+				scale.x = scalex;
+				scale.y = scaley;
+				scale.z = scalez;
 			}
 			nLine++;
 		}

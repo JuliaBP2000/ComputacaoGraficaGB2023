@@ -1,6 +1,7 @@
-camPos 0 0 3
+camPos 0 2 9
 camFrn 0 0 -1
 camUpv 0 1 0
+scale 0 -1 2
 
 object ../../3D_models/Pokemon/Pikachu.obj
 texture ../../3D_models/Pokemon/Pikachu.mtl
